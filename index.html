@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>issueaurus</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="header-row">
+      <h1>issueaurus</h1>
+      <span class="snapshot" id="snapshot"></span>
+    </div>
+    <p class="sub"><a id="repo-link" href=""></a> · <span id="total"></span> issues ·
+      raw <a href="data/issues.json">json</a> / <a href="data/issues.csv">csv</a></p>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" id="tab-issues" type="button" role="tab"
+      aria-controls="view-issues" aria-selected="true">Issues
+      <span class="tab-count" id="tab-issues-count"></span></button>
+    <button class="tab" id="tab-duplicates" type="button" role="tab"
+      aria-controls="view-duplicates" aria-selected="false">Duplicates
+      <span class="tab-count" id="tab-dups-count"></span></button>
+  </nav>
+
+  <section class="view" id="view-issues" role="tabpanel" aria-labelledby="tab-issues">
+    <section class="filters">
+      <div class="field grow">
+        <label for="search">Search</label>
+        <input id="search" type="search" placeholder="words in title, body or labels…" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="kind">Kind</label>
+        <select id="kind"></select>
+      </div>
+      <div class="field">
+        <label for="area">Area</label>
+        <select id="area"></select>
+      </div>
+    <div class="field multi-field" id="version-field">
+      <label id="version-label">Branch</label>
+      <button type="button" id="version" class="multi-trigger"
+        aria-labelledby="version-label" aria-haspopup="true" aria-expanded="false">all branches</button>
+      <div class="multi-menu" id="version-menu" role="group" aria-label="Branch filters" hidden></div>
+    </div>
+    <div class="field">
+      <label for="triage">Triage</label>
+      <select id="triage"></select>
+    </div>
+      <div class="field">
+        <label for="sort">Sort</label>
+        <select id="sort"></select>
+      </div>
+      <label class="check"><input id="dups" type="checkbox"> has duplicates</label>
+      <button id="reset" type="button">Reset</button>
+    </section>
+
+    <p class="count" id="count"></p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="num">#</th>
+            <th>Title</th>
+            <th>Kind</th>
+            <th>Area</th>
+            <th>Branch</th>
+            <th>Labels</th>
+            <th>Duplicates</th>
+            <th>Triage</th>
+            <th>Created</th>
+            <th>Updated</th>
+            <th class="num">Comments</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="view pairs" id="view-duplicates" role="tabpanel" aria-labelledby="tab-duplicates" hidden>
+    <h2>Duplicate pairs <span class="pairs-count" id="pairs-count"></span></h2>
+    <p class="pairs-note">Matched on title similarity, plus curated pairs from manual
+      triage. Confidence is rated out of 5: curated pairs are confirmed 5/5, scored
+      pairs are candidates — higher confidence first.</p>
+    <div id="pairs-list"></div>
+  </section>
+
+  <footer>
+    regenerate with <code>python3 scripts/fetch_issues.py</code> ·
+    serve with <code>python3 -m http.server</code>
+  </footer>
+
+  <script src="data/data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
