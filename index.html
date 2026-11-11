@@ -23,6 +23,9 @@
     <button class="tab" id="tab-duplicates" type="button" role="tab"
       aria-controls="view-duplicates" aria-selected="false">Duplicates
       <span class="tab-count" id="tab-dups-count"></span></button>
+    <button class="tab" id="tab-assessment" type="button" role="tab"
+      aria-controls="view-assessment" aria-selected="false">Assessment
+      <span class="tab-count" id="tab-assessment-count"></span></button>
   </nav>
 
   <section class="view" id="view-issues" role="tabpanel" aria-labelledby="tab-issues">
@@ -83,10 +86,45 @@
 
   <section class="view pairs" id="view-duplicates" role="tabpanel" aria-labelledby="tab-duplicates" hidden>
     <h2>Duplicate pairs <span class="pairs-count" id="pairs-count"></span></h2>
-    <p class="pairs-note">Matched on title similarity, plus curated pairs from manual
-      triage. Confidence is rated out of 5: curated pairs are confirmed 5/5, scored
+    <p class="pairs-note">Matched on title similarity, plus curated pairs from manual triage.
+      Confidence is rated out of 5: curated pairs are confirmed 5/5, scored
       pairs are candidates — higher confidence first.</p>
     <div id="pairs-list"></div>
+  </section>
+
+  <section class="view assessment" id="view-assessment" role="tabpanel" aria-labelledby="tab-assessment" hidden>
+    <h2>Resolution assessment <span class="pairs-count" id="assessment-meta"></span></h2>
+    <p class="pairs-note">Code-inspection verdicts for the open 4.0/4.1/4.2 bugs:
+      which look already resolved on <code>main</code>, which failure modes are still
+      present, and which cannot be told from code alone. <strong>Not tested</strong> —
+      verify before closing anything.</p>
+    <section class="filters">
+      <div class="field grow">
+        <label for="assess-search">Search</label>
+        <input id="assess-search" type="search" placeholder="title or evidence…" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="assess-verdict">Verdict</label>
+        <select id="assess-verdict"></select>
+      </div>
+      <button id="assess-reset" type="button">Reset</button>
+    </section>
+    <p class="count" id="assess-count"></p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="num">#</th>
+            <th>Title</th>
+            <th>Branch</th>
+            <th>Area</th>
+            <th>Verdict</th>
+            <th>Evidence (main @ <span id="assess-checkout"></span>)</th>
+          </tr>
+        </thead>
+        <tbody id="assess-tbody"></tbody>
+      </table>
+    </div>
   </section>
 
   <footer>

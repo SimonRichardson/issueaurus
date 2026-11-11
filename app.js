@@ -29,6 +29,15 @@
     tabDups: document.getElementById("tab-duplicates"),
     tabIssuesCount: document.getElementById("tab-issues-count"),
     tabDupsCount: document.getElementById("tab-dups-count"),
+    tabAssessment: document.getElementById("tab-assessment"),
+    tabAssessmentCount: document.getElementById("tab-assessment-count"),
+    assessSearch: document.getElementById("assess-search"),
+    assessVerdict: document.getElementById("assess-verdict"),
+    assessReset: document.getElementById("assess-reset"),
+    assessCount: document.getElementById("assess-count"),
+    assessTbody: document.getElementById("assess-tbody"),
+    assessMeta: document.getElementById("assessment-meta"),
+    assessCheckout: document.getElementById("assess-checkout"),
     snapshot: document.getElementById("snapshot"),
     repoLink: document.getElementById("repo-link"),
     total: document.getElementById("total"),
@@ -57,7 +66,8 @@
     ["untriaged", "needs-triage"],
   ];
 
-  const state = { q: "", kind: "", area: "", versions: [], triage: "", sort: "number-desc", dupsOnly: false };
+  const state = { q: "", kind: "", area: "", versions: [], triage: "", sort: "number-desc",
+                  dupsOnly: false, assessQ: "", assessVerdict: "" };
 
   function restoreState() {
     try {
@@ -296,13 +306,69 @@
     }).join("") : '<p class="pairs-empty">No duplicate pairs found in this dataset.</p>';
   }
 
+  const VERDICT_ORDER = { "likely-resolved": 0, "likely-not-resolved": 1, "unclear": 2 };
+  const VERDICT_LABELS = {
+    "likely-resolved": "likely resolved",
+    "likely-not-resolved": "likely not resolved",
+    "unclear": "unclear",
+  };
+
+  function renderAssessment() {
+    const assessed = ISSUES.filter(i => i.resolution);
+    els.tabAssessmentCount.textContent = assessed.length;
+    const first = assessed[0];
+    if (first) {
+      const r = first.resolution;
+      els.assessMeta.textContent = `(${assessed.length} · ${r.assessed_at})`;
+      els.assessCheckout.textContent = r.checkout;
+    } else {
+      els.assessMeta.textContent = "";
+    }
+    const verdicts = new Map();
+    for (const i of assessed) verdicts.set(i.resolution.verdict, (verdicts.get(i.resolution.verdict) || 0) + 1);
+    fillSelect(els.assessVerdict, "all verdicts",
+      Object.keys(VERDICT_ORDER).sort((a, b) => VERDICT_ORDER[a] - VERDICT_ORDER[b])
+        .map(v => [v, `${VERDICT_LABELS[v]} (${verdicts.get(v) || 0})`]));
+
+    const q = state.assessQ.toLowerCase();
+    const rows = assessed.filter(i => {
+      if (state.assessVerdict && i.resolution.verdict !== state.assessVerdict) return false;
+      if (q) {
+        const hay = (i.title + "\n" + i.resolution.evidence + "\n" + i.area).toLowerCase();
+        if (!q.split(/\s+/).filter(Boolean).every(t => hay.includes(t))) return false;
+      }
+      return true;
+    }).sort((a, b) => {
+      const va = VERDICT_ORDER[a.resolution.verdict] ?? 9;
+      const vb = VERDICT_ORDER[b.resolution.verdict] ?? 9;
+      if (va !== vb) return va - vb;
+      return b.number - a.number;
+    });
+
+    els.assessCount.textContent = `Showing ${rows.length} of ${assessed.length} assessed issues`;
+    els.assessTbody.innerHTML = rows.length ? rows.map(r => {
+      const v = r.resolution.verdict;
+      const versions = versionBadges(r);
+      return `<tr>
+        <td class="num"><a href="${esc(r.url)}" target="_blank" rel="noopener">${r.number}</a></td>
+        <td class="title"><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a></td>
+        <td>${versions}</td>
+        <td class="area">${esc(r.area)}</td>
+        <td><span class="verdict verdict-${v}">${esc(VERDICT_LABELS[v] || v)}</span></td>
+        <td class="evidence">${esc(r.resolution.evidence)}</td>
+      </tr>`;
+    }).join("") : '<tr><td colspan="6" class="empty">No assessed issues match.</td></tr>';
+  }
+
   const TABS = {
     issues: { button: "tab-issues", panel: "view-issues" },
     duplicates: { button: "tab-duplicates", panel: "view-duplicates" },
+    assessment: { button: "tab-assessment", panel: "view-assessment" },
   };
 
   function currentTab() {
-    return location.hash === "#duplicates" ? "duplicates" : "issues";
+    return location.hash === "#duplicates" ? "duplicates"
+      : location.hash === "#assessment" ? "assessment" : "issues";
   }
 
   function setTab(name) {
@@ -314,7 +380,7 @@
       button.setAttribute("aria-selected", active ? "true" : "false");
       panel.hidden = !active;
     }
-    history.replaceState(null, "", name === "duplicates" ? "#duplicates" : "#issues");
+    history.replaceState(null, "", `#${name}`);
   }
 
   function syncControls() {
@@ -324,6 +390,8 @@
     els.triage.value = state.triage;
     els.sort.value = state.sort;
     els.dups.checked = !!state.dupsOnly;
+    els.assessSearch.value = state.assessQ;
+    els.assessVerdict.value = state.assessVerdict;
     syncVersionMenu();
   }
 
@@ -369,12 +437,36 @@
 
   els.tabIssues.addEventListener("click", () => setTab("issues"));
   els.tabDups.addEventListener("click", () => setTab("duplicates"));
+  els.tabAssessment.addEventListener("click", () => setTab("assessment"));
   window.addEventListener("hashchange", () => setTab(currentTab()));
+
+  let assessDebounce = null;
+  els.assessSearch.addEventListener("input", () => {
+    clearTimeout(assessDebounce);
+    assessDebounce = setTimeout(() => {
+      state.assessQ = els.assessSearch.value.trim();
+      renderAssessment();
+      saveState();
+    }, 120);
+  });
+  els.assessVerdict.addEventListener("change", () => {
+    state.assessVerdict = els.assessVerdict.value;
+    renderAssessment();
+    saveState();
+  });
+  els.assessReset.addEventListener("click", () => {
+    state.assessQ = "";
+    state.assessVerdict = "";
+    syncControls();
+    renderAssessment();
+    saveState();
+  });
 
   restoreState();
   buildControls();
   syncControls();
   render();
   renderPairs();
+  renderAssessment();
   setTab(currentTab());
 })();

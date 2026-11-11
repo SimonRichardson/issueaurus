@@ -118,7 +118,9 @@ STATES = ["state/blocked", "state/in-progress", "state/incomplete",
 
 CSV_COLUMNS = ["number", "title", "kind", "area", "versions", "labels", "states",
                "triaged", "needs_triage", "author", "created", "updated",
-               "comments", "duplicates", "url"]
+               "comments", "duplicates", "resolution_verdict", "url"]
+
+ASSESSMENT_FILE = Path(__file__).resolve().parent / "resolution_assessment.json"
 
 # Manually confirmed duplicate pairs from triage (issue numbers). Only applied
 # when both issues exist in the fetched set, so other repos are unaffected.
@@ -272,6 +274,37 @@ def classify(issue):
     }
 
 
+def load_assessment():
+    """Load the curated resolution assessment (code-inspection verdicts)."""
+    if not ASSESSMENT_FILE.exists():
+        return None
+    with open(ASSESSMENT_FILE, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def attach_assessment(records, assessment):
+    """Attach resolution verdicts to matching records; return (attached, missing)."""
+    if not assessment:
+        return 0, []
+    verdicts = assessment["verdicts"]
+    meta = {k: assessment[k] for k in ("assessed_at", "checkout", "method") if k in assessment}
+    attached = 0
+    missing = []
+    by_num = {r["number"]: r for r in records}
+    for num_str, v in verdicts.items():
+        num = int(num_str)
+        if num in by_num:
+            by_num[num]["resolution"] = {
+                "verdict": v["verdict"],
+                "evidence": v["evidence"],
+                **meta,
+            }
+            attached += 1
+        else:
+            missing.append(num)
+    return attached, missing
+
+
 def write_outputs(records, out_dir, repo, state):
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -301,6 +334,7 @@ def write_outputs(records, out_dir, repo, state):
                 "|".join(f"#{d['number']}({d['confidence']}/5"
                          + (f",{d['score']}" if d["score"] is not None else ",curated") + ")"
                          for d in r["duplicates"]),
+                (r.get("resolution") or {}).get("verdict", ""),
                 r["url"],
             ])
     return envelope
@@ -342,6 +376,8 @@ def main():
     raw = fetch_raw(args.repo, args.state, args.per_page, args.max_pages)
     records = [classify(i) for i in raw]
     pairs = detect_duplicates(records)
+    assessment = load_assessment()
+    attached, missing = attach_assessment(records, assessment)
     envelope = write_outputs(records, args.out, args.repo, args.state)
 
     out_dir = Path(args.out)
@@ -375,6 +411,18 @@ def main():
         else:
             tag = f"{confidence_band(score)}/5 {score}"
         print(f"  #{a} ~ #{b} [{tag}]  {by_num[a]['title']}  |  {by_num[b]['title']}")
+    print()
+    if assessment:
+        print(f"resolution assessment: {attached} issues"
+              + (f" ({len(missing)} assessed issues not in this dataset: "
+                 f"{', '.join('#' + str(n) for n in sorted(missing))})" if missing else ""))
+        verdict_tally = {}
+        for r in records:
+            v = (r.get("resolution") or {}).get("verdict")
+            if v:
+                verdict_tally[v] = verdict_tally.get(v, 0) + 1
+        print("verdicts: " + " · ".join(
+            f"{v}: {verdict_tally[v]}" for v in sorted(verdict_tally, key=lambda x: -verdict_tally[x])))
 
 
 if __name__ == "__main__":

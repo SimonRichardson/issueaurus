@@ -89,7 +89,14 @@
       "updated": "2026-11-11",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/23791",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Force skips the instance-not-dead gates (domain/removal/service/machine.go:253); the provisioner only stops Dead machines (internal/provisionertask/provisioner_task.go:530) — the record is deleted before the instance stops.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23788,
@@ -116,7 +123,14 @@
       "updated": "2026-11-10",
       "comments": 2,
       "url": "https://github.com/juju/juju/issues/23788",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "syscall.Umask(077) window in unix socket creation (juju/sockets/sockets_unix.go:106); no agent-level umask handling exists in jujuagentd startup.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23787,
@@ -140,7 +154,14 @@
       "updated": "2026-11-10",
       "comments": 0,
       "url": "https://github.com/juju/juju/issues/23787",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "IsUnitDyingAndBlocked still matches 'blocked' (domain/removal/state/model/relation.go:588); the force-depart trigger was deliberately added in d891c2d1b20 and nothing distinguishes workload-blocked from agent-stuck.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23776,
@@ -217,7 +238,14 @@
           "source": "curated",
           "confidence": 5
         }
-      ]
+      ],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Still lumberjack rename-based rotation plus ReOpen tail — the identical mechanism from the report (internal/logtailer/tailer.go:214).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23744,
@@ -241,7 +269,14 @@
       "updated": "2026-11-09",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/23744",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "inferEndpoints returns AmbiguousRelation on multiple matches; no juju-info tiebreak anywhere in domain/relation (relation.go:3724).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23743,
@@ -268,7 +303,14 @@
       "updated": "2026-11-11",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/23743",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "UnsetApplicationConfigKeys never updates the config hash (domain/application/state/application.go:2393) — and the uniter only runs config-changed on hash change.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23742,
@@ -297,7 +339,14 @@
       "updated": "2026-11-09",
       "comments": 2,
       "url": "https://github.com/juju/juju/issues/23742",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "No container-scoped pairing: relation_unit has no scope dimension and the watcher returns all units of both applications (domain/relation/state/related_unit_watcher.go:84).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23725,
@@ -342,7 +391,14 @@
       "updated": "2026-11-09",
       "comments": 3,
       "url": "https://github.com/juju/juju/issues/23717",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "cloud.Credential and the cloud_credential table have no region field (cloud/credentials.go:50); the region remains transient in finalizeProvider (cmd/juju/cloud/addcredential.go:389).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23714,
@@ -368,7 +424,14 @@
       "updated": "2026-11-04",
       "comments": 0,
       "url": "https://github.com/juju/juju/issues/23714",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Label filter returns every matching secret across owners; no single-result enforcement or ambiguity error (cmd/juju/secrets/show.go:132).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23711,
@@ -424,7 +487,14 @@
       "updated": "2026-11-04",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/23708",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "AgentPresence.Leave deletes presence on any connection close with no session identity or refcount guard (apiserver/observer/agentpresence.go:119).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23673,
@@ -450,7 +520,14 @@
       "updated": "2026-10-27",
       "comments": 0,
       "url": "https://github.com/juju/juju/issues/23673",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "ModelInfo collapses NotFound and never calls ModelRedirection (apiserver/facades/client/modelmanager/modelmanager.go:1048); ModelStatus still redirects.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23659,
@@ -474,7 +551,14 @@
       "updated": "2026-11-04",
       "comments": 2,
       "url": "https://github.com/juju/juju/issues/23659",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "All dead machines batch into one StopInstances call; one provider error kills the whole task and no machine gets marked for removal (internal/provisionertask/provisioner_task.go:629-673).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23658,
@@ -544,7 +628,14 @@
           "source": "auto",
           "confidence": 3
         }
-      ]
+      ],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Attachment death requires a uniter (sole caller of MarkStorageAttachmentAsDead is the uniter facade); an unprovisioned machine has no agent, so the attachment stays dying forever.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23656,
@@ -597,7 +688,14 @@
           "source": "auto",
           "confidence": 1
         }
-      ]
+      ],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Same agent-driven gating as 23657; no handling for a removal scheduled before the unit agent has started.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23654,
@@ -650,7 +748,14 @@
           "source": "auto",
           "confidence": 1
         }
-      ]
+      ],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "An unschedulable pod never runs a uniter, so the attachment stays dying and the unit/application can never complete removal; CAAS removal routes through the same gated jobs.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23652,
@@ -719,7 +824,14 @@
       "updated": "2026-11-04",
       "comments": 0,
       "url": "https://github.com/juju/juju/issues/23647",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-resolved",
+        "evidence": "Leadership revocation moved out of RemoveUnit into the post-scope removal job (commit c2a3b89284c, Oct 2026, 'retain leadership during unit departure') — departure hooks keep leader access.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23641,
@@ -743,7 +855,14 @@
       "updated": "2026-10-16",
       "comments": 3,
       "url": "https://github.com/juju/juju/issues/23641",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-resolved",
+        "evidence": "Object-store tracker worker watches model life and RemoveAll's data on Dead/NotFound (internal/worker/objectstore/trackerworker.go:199; commit 75eb509ba42).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23640,
@@ -767,7 +886,14 @@
       "updated": "2026-11-04",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/23640",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Consumer teardown notifications are best-effort one-shot (localconsumerworker.go:565); no offering-side reconciliation for lost notifications.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23630,
@@ -874,7 +1000,14 @@
           "source": "curated",
           "confidence": 5
         }
-      ]
+      ],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Import handles unit+machine password hashes only (domain/agentpassword/modelmigration/import.go:62-92); the 4.x authenticator still supports application-tag logins.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23584,
@@ -906,7 +1039,14 @@
           "source": "curated",
           "confidence": 5
         }
-      ]
+      ],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "No podspec/operator-format rejection anywhere in the migration path (internal/migration/precheck.go:429; domain/modelmigration/service/prechecks.go:26).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23582,
@@ -1049,7 +1189,14 @@
       "updated": "2026-10-09",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/23552",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "CleanupSecrets/dropSecretAccess exist but a repo-wide grep finds no production caller — only mocks and provider tests.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23546,
@@ -1073,7 +1220,14 @@
       "updated": "2026-10-08",
       "comments": 2,
       "url": "https://github.com/juju/juju/issues/23546",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Charm origin ID/Hash copied verbatim (domain/application/modelmigration/import.go:388); no 3.6-style per-charm-URL repair exists.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23543,
@@ -1283,7 +1437,14 @@
           "source": "curated",
           "confidence": 5
         }
-      ]
+      ],
+      "resolution": {
+        "verdict": "unclear",
+        "evidence": "No error output in the report; several k8s bootstrap fixes landed since, but none attributable to this report.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23459,
@@ -1334,7 +1495,14 @@
       "updated": "2026-10-21",
       "comments": 3,
       "url": "https://github.com/juju/juju/issues/23456",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-resolved",
+        "evidence": "Controller Service tracked as its own net node; client discovery for CAAS excludes pod addresses (domain/network/service/controller.go:83); PR #23416 QA shows the LB address advertised.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23433,
@@ -1358,7 +1526,14 @@
       "updated": "2026-10-02",
       "comments": 3,
       "url": "https://github.com/juju/juju/issues/23433",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Model default base pinned into the origin even with explicit --revision (deployrepository.go:902); revision-not-found aborts instead of re-resolving.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23413,
@@ -1456,7 +1631,14 @@
           "source": "curated",
           "confidence": 5
         }
-      ]
+      ],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "tests/includes/awscli.sh still writes real $HOME/.aws with only a skip-if-exists guard; no HOME or AWS_*_FILE isolation anywhere.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23393,
@@ -1480,7 +1662,14 @@
       "updated": "2026-10-02",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/23393",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "unclear",
+        "evidence": "Deploy/refresh unified through ResolveResources, but revision matching is charm-revision-agnostic (charmhub.go:574) — enforcement not demonstrably present or absent.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23391,
@@ -1504,7 +1693,14 @@
       "updated": "2026-10-02",
       "comments": 2,
       "url": "https://github.com/juju/juju/issues/23391",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "SetUnitResource checks existence only — no available-vs-potential validation (domain/resource/state/resource.go:1108).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23361,
@@ -1552,7 +1748,14 @@
       "updated": "2026-09-18",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/23353",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "unclear",
+        "evidence": "Placeholder issue body ('test'); nothing actionable to verify.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23351,
@@ -1600,7 +1803,14 @@
       "updated": "2026-09-18",
       "comments": 3,
       "url": "https://github.com/juju/juju/issues/23335",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Scale-up never reuses detached storage: 'A brand new unit has no existing storage instances… always nil' (domain/storageprovisioning/unitstorageargs.go:68); no reuse implemented.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23331,
@@ -1693,7 +1903,14 @@
           "source": "auto",
           "confidence": 1
         }
-      ]
+      ],
+      "resolution": {
+        "verdict": "likely-resolved",
+        "evidence": "relation_unit_departure tombstone trigger retains departed identity (domain/schema/model/sql/0024-relation.sql:127); GetRelationUnitChanges resolves the name post-delete (domain/relation/state/relation.go:1318). Commits 8960f0060a, 490c1214e1e (Sep 2026).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23309,
@@ -1828,7 +2045,14 @@
           "source": "auto",
           "confidence": 1
         }
-      ]
+      ],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Test unchanged since before the filing; the only later commit to the file was cosmetic SQL quoting.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23222,
@@ -1852,7 +2076,14 @@
       "updated": "2026-09-09",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/23222",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Same single-attempt notifications; the removed-relation path skips notification entirely when the worker doesn't exist.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23213,
@@ -2038,7 +2269,14 @@
       "updated": "2026-09-17",
       "comments": 2,
       "url": "https://github.com/juju/juju/issues/23141",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "unclear",
+        "evidence": "Controller arch fixed (e6117e79e5), but unit arch still falls back to amd64; the symptom is a charm dispatch exec error — not attributable either way.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23140,
@@ -2154,7 +2392,14 @@
       "updated": "2026-09-15",
       "comments": 2,
       "url": "https://github.com/juju/juju/issues/23128",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "unclear",
+        "evidence": "Current grant path looks sound end-to-end; no silent no-op found and no fix commit identified — may have been environmental.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23126,
@@ -2256,7 +2501,14 @@
       "updated": "2026-08-26",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/23110",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Activator still runs before createModelInfo; the code carries the admitting TODO comment (modelmanager.go:311-325).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 23093,
@@ -2309,7 +2561,14 @@
       "updated": "2026-08-26",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/23075",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "CAAS attach-storage gates still verbatim: deploy.go:121, deployrepository.go:124, addunit.go:60.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22988,
@@ -2468,7 +2727,14 @@
           "source": "auto",
           "confidence": 1
         }
-      ]
+      ],
+      "resolution": {
+        "verdict": "likely-resolved",
+        "evidence": "Missing ControllerConfig gomock expectation fixed — no more Goexit inside the catacomb goroutine (internal/worker/sshserver/manifold_test.go:222; commit fe69f4c0e67). Caveat: fix predates the filing; the July flake may have been on the 4.1 branch.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22934,
@@ -2529,7 +2795,14 @@
       "updated": "2026-10-13",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/22924",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Fix eaf7b617811 (PR #23623) merged to the 4.0 branch only — not an ancestor of main; main still sorts by scope/origin/value (core/network/address.go:755).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22908,
@@ -2556,7 +2829,14 @@
       "updated": "2026-10-05",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/22908",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-resolved",
+        "evidence": "controlleragentconfig manifold deliberately creates configchange.socket on every machine; deployer gated on the readiness flag (cmd/jujuagentd/agent/machine/manifolds.go:258; commit 5a6a96b281b, May 2026).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22903,
@@ -2605,7 +2885,14 @@
       "updated": "2026-07-15",
       "comments": 0,
       "url": "https://github.com/juju/juju/issues/22900",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Environment updates applied unconditionally on every change event; only file writes are diff-guarded (internal/worker/proxyupdater/proxyupdater.go:143).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22892,
@@ -3150,7 +3437,14 @@
           "source": "auto",
           "confidence": 3
         }
-      ]
+      ],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Fix 9d5fc3560d2 ('Fixes #22688') exists only on unmerged PR branch pr/23481 — not an ancestor of main; pending-hook recording unchanged (worker/uniter/operation/runhook.go:110).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22685,
@@ -3355,7 +3649,14 @@
       "updated": "2026-06-09",
       "comments": 5,
       "url": "https://github.com/juju/juju/issues/22578",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-resolved",
+        "evidence": "SetModelConfig strips agent-version/agent-stream before validation (domain/modelconfig/service/service.go:349); createModelInfo parses and passes the supplied agent-version through. Covered by facade tests.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22567,
@@ -3429,7 +3730,14 @@
       "updated": "2026-06-01",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/22526",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Upgrade-smoke bootstrap still single-shot with no retry/readiness guard (.github/workflows/upgrade.yml:210).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22521,
@@ -3461,7 +3769,14 @@
           "source": "curated",
           "confidence": 5
         }
-      ]
+      ],
+      "resolution": {
+        "verdict": "likely-resolved",
+        "evidence": "Whole-output assert replaced with order-agnostic contains assertions (cmd/juju/secrets/list_test.go:218; commit 887eb417c70, May 2026).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22511,
@@ -3506,7 +3821,14 @@
       "updated": "2026-10-09",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/22505",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Racy check-then-log pattern unchanged (internal/logger/testing/check.go:63).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22500,
@@ -3776,7 +4098,14 @@
           "source": "auto",
           "confidence": 1
         }
-      ]
+      ],
+      "resolution": {
+        "verdict": "likely-resolved",
+        "evidence": "Backoff-mock deadlock fixed: expectAfterWithoutTermTimeout handles both term-timeout and backoff paths (internal/changestream/stream/stream_test.go:261; commit f3e11b3bb47, Jul 2026).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22374,
@@ -3818,7 +4147,14 @@
           "source": "auto",
           "confidence": 1
         }
-      ]
+      ],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Test and reconnect/UpdateAddresses logic unchanged since before the filing; only a Report timeout tweak landed after.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22367,
@@ -3869,7 +4205,14 @@
       "updated": "2026-07-17",
       "comments": 2,
       "url": "https://github.com/juju/juju/issues/22348",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Racy window remains: the channel send succeeds before connected.Store(false) runs (worker_test.go:288 vs worker.go:249).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22342,
@@ -3949,7 +4292,14 @@
       "updated": "2026-06-19",
       "comments": 17,
       "url": "https://github.com/juju/juju/issues/22323",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "unclear",
+        "evidence": "Body shows only postgres/patroni logs; no juju defect identifiable from the report.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22322,
@@ -3995,7 +4345,14 @@
           "source": "auto",
           "confidence": 1
         }
-      ]
+      ],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Test unchanged; the later flakiness fix targeted a different race (isRelationWorkerDead during CleanKill).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22307,
@@ -4125,7 +4482,14 @@
       "updated": "2026-05-01",
       "comments": 3,
       "url": "https://github.com/juju/juju/issues/22219",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Volume side fixed, but attachment side never writes provider_id — VolumeAttachmentProvisionedInfo has no such field.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22198,
@@ -4178,7 +4542,14 @@
       "updated": "2026-09-29",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/22192",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "unclear",
+        "evidence": "No code path found where a wedged dying machine blocks creation; only a plausible provisioner crash-loop coupling, which doesn't match the reported trigger.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22187,
@@ -4252,7 +4623,14 @@
       "updated": "2026-10-09",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/22169",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Full per-request service round trip unchanged (modelmanager.go:954-1140).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22156,
@@ -4323,7 +4701,14 @@
       "updated": "2026-06-05",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/22120",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "~9 service calls per application remain; the comment still says 'this should be a single call' after a service refactor that never happened.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22114,
@@ -4372,7 +4757,14 @@
       "updated": "2026-03-30",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/22106",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Raw per-poll entity counts with no monotonic or CMR-aware handling (cmd/juju/model/destroy.go:384).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 22083,
@@ -4852,7 +5244,14 @@
       "updated": "2026-03-13",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/21850",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "unclear",
+        "evidence": "Warning originates in AWS SDK middleware; juju enables and sends checksums but nothing handles missing-checksum responses — neither persistence nor resolution demonstrable.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 21823,
@@ -5099,7 +5498,14 @@
       "updated": "2026-06-30",
       "comments": 2,
       "url": "https://github.com/juju/juju/issues/21727",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "ImageRepoDetails still lacks json/yaml struct tags (core/resource/dockerresource.go:79), so fingerprints still differ from 3.6.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 21712,
@@ -6039,7 +6445,14 @@
       "updated": "2025-12-05",
       "comments": 2,
       "url": "https://github.com/juju/juju/issues/21404",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Host-key verification failures still only logged via logger.Debugf and retried to timeout (internal/provider/common/bootstrap.go:735); no user-facing reporting.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 21402,
@@ -6168,7 +6581,14 @@
       "updated": "2026-09-16",
       "comments": 1,
       "url": "https://github.com/juju/juju/issues/21372",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-resolved",
+        "evidence": "Bootstrap API poll loop treats proxy-connect errors and lost pod connections as retryable (cmd/juju/common/controller.go:166; commits a247e66b92a, ce29d7c85c0, Jul 2026).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 21363,
@@ -6245,7 +6665,14 @@
           "source": "auto",
           "confidence": 2
         }
-      ]
+      ],
+      "resolution": {
+        "verdict": "likely-resolved",
+        "evidence": "Forced removal jobs skip every status/life gate (domain/removal/service/storage.go:409); children of forced removals are scheduled force+wait (commit 11406bb6155, Oct 2026).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 21350,
@@ -6296,7 +6723,14 @@
       "updated": "2026-10-15",
       "comments": 4,
       "url": "https://github.com/juju/juju/issues/21337",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-not-resolved",
+        "evidence": "Opener resolves by the application's current charm first; the unit's own revision is never considered (internal/resource/opener.go:177).",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 21332,
@@ -6393,7 +6827,14 @@
           "source": "auto",
           "confidence": 2
         }
-      ]
+      ],
+      "resolution": {
+        "verdict": "unclear",
+        "evidence": "Bootstrap validates and creates controller pools (cmd/juju/commands/bootstrap.go:948); the issue body is truncated before the actual failure.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 21248,
@@ -7948,7 +8389,14 @@
       "updated": "2026-09-01",
       "comments": 3,
       "url": "https://github.com/juju/juju/issues/20148",
-      "duplicates": []
+      "duplicates": [],
+      "resolution": {
+        "verdict": "likely-resolved",
+        "evidence": "OVN added as a valid LXD subnet source (internal/provider/lxd/environ_network.go:73; commit 9a22d99f342). MACVLAN remains, but LXD exposes no IPAM data for it — not code-detectable.",
+        "assessed_at": "2026-11-11",
+        "checkout": "0483b81440",
+        "method": "code inspection only, no testing"
+      }
     },
     {
       "number": 20146,

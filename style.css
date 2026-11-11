@@ -448,6 +448,42 @@ td.dups { max-width: 150px; }
   color: var(--muted);
 }
 
+/* assessment (resolution verdicts) */
+
+.assessment { margin-top: 20px; }
+.assessment h2 { margin: 12px 0 4px; font-size: 19px; }
+.assessment table { min-width: 860px; }
+.assessment td.evidence {
+  font-size: 12px;
+  color: var(--muted);
+  min-width: 320px;
+  max-width: 520px;
+}
+
+.verdict {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 1px 9px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.verdict-likely-resolved {
+  background: #e6f4ea;
+  border: 1px solid #9fd6ae;
+  color: #137333;
+}
+.verdict-likely-not-resolved {
+  background: #fde8e8;
+  border: 1px solid #f3b2b2;
+  color: #b3261e;
+}
+.verdict-unclear {
+  background: #fff4e5;
+  border: 1px solid #f0c48c;
+  color: #8a5a00;
+}
+
 footer {
   margin-top: 24px;
   padding: 16px 20px 32px;
