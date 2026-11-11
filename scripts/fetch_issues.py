@@ -278,7 +278,7 @@ def write_outputs(records, out_dir, repo, state):
     envelope = {
         "repo": repo,
         "state": state,
-        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         "count": len(records),
         "issues": records,
     }
