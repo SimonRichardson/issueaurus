@@ -459,6 +459,17 @@ td.dups { max-width: 150px; }
   min-width: 320px;
   max-width: 520px;
 }
+.assessment td.evidence a {
+  color: var(--accent-dark);
+  text-decoration: none;
+  font-weight: 600;
+}
+.assessment td.evidence a:hover { text-decoration: underline; }
+th a {
+  color: var(--accent-dark);
+  text-decoration: none;
+}
+th a:hover { text-decoration: underline; }
 
 .verdict {
   display: inline-block;

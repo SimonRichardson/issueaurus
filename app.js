@@ -196,6 +196,18 @@
       ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }
 
+  function linkify(text) {
+    const gh = `https://github.com/${DATA.repo}`;
+    return esc(text).replace(
+      /(PR\s+#(\d+))|(pr\/(\d+))|(\b[0-9a-f]{7,40}\b)|((?<!&)#(\d+))/g,
+      (m, prRef, prNum, prBranch, prBranchNum, sha, issueRef, issueNum) => {
+        if (prRef) return `<a href="${gh}/pull/${prNum}" target="_blank" rel="noopener">PR #${prNum}</a>`;
+        if (prBranch) return `<a href="${gh}/pull/${prBranchNum}" target="_blank" rel="noopener">pr/${prBranchNum}</a>`;
+        if (sha) return `<a href="${gh}/commit/${sha}" target="_blank" rel="noopener">${sha}</a>`;
+        return `<a href="${gh}/issues/${issueNum}" target="_blank" rel="noopener">#${issueNum}</a>`;
+      });
+  }
+
   function kindBadge(issue) {
     return issue.kind && issue.kind !== "-"
       ? `<span class="badge kind-${esc(issue.kind)}">${esc(issue.kind)}</span>` : "";
@@ -320,7 +332,9 @@
     if (first) {
       const r = first.resolution;
       els.assessMeta.textContent = `(${assessed.length} · ${r.assessed_at})`;
-      els.assessCheckout.textContent = r.checkout;
+      els.assessCheckout.innerHTML =
+        `<a href="https://github.com/${DATA.repo}/commit/${esc(r.checkout)}" ` +
+        `target="_blank" rel="noopener">${esc(r.checkout)}</a>`;
     } else {
       els.assessMeta.textContent = "";
     }
@@ -355,7 +369,7 @@
         <td>${versions}</td>
         <td class="area">${esc(r.area)}</td>
         <td><span class="verdict verdict-${v}">${esc(VERDICT_LABELS[v] || v)}</span></td>
-        <td class="evidence">${esc(r.resolution.evidence)}</td>
+        <td class="evidence">${linkify(r.resolution.evidence)}</td>
       </tr>`;
     }).join("") : '<tr><td colspan="6" class="empty">No assessed issues match.</td></tr>';
   }
