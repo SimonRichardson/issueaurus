@@ -2,7 +2,7 @@
   "repo": "juju/juju",
   "state": "open",
   "generated_at": "2026-11-11",
-  "count": 378,
+  "count": 377,
   "issues": [
     {
       "number": 23804,
@@ -2037,13 +2037,6 @@
           "score": 0.52,
           "source": "auto",
           "confidence": 2
-        },
-        {
-          "number": 22944,
-          "title": "Flaky test in the sshserver worker",
-          "score": 0.5,
-          "source": "auto",
-          "confidence": 1
         }
       ],
       "resolution": {
@@ -2696,45 +2689,6 @@
       "comments": 0,
       "url": "https://github.com/juju/juju/issues/22947",
       "duplicates": []
-    },
-    {
-      "number": 22944,
-      "title": "Flaky test in the sshserver worker",
-      "body": "### Description\n\nFrom our Jenkins CI:\n```\npanic: test timed out after 10m0s\n\trunning tests:\n\t\tTestManifoldSuite (10m0s)\n\t\tTestManifoldSuite/TestManifoldStart (10m0s)\n\ngoroutine 54 [running]:\ntesting.(*M).startAlarm.func1()\n\t/usr/local/go/src/testing/testing.go:2802 +0x605\ncreated by time.goFunc\n\t/usr/local/go/src/time/sleep.go:215 +0x45\n\ngoroutine 1 [chan receive, 9 minutes]:\ntesting.(*T).Run(0xc0003a5688, {0x3f861f7, 0x11}, 0x40c27d0)\n\t/usr/local/go/src/testing/testing.go:2109 +0xb3e\ntesting.runTests.func1(0xc0003a5688)\n\t/usr/local/go/src/testing/testing.go:2585 +0x85\ntesting.tRunner(0xc0003a5688, 0xc00062fad0)\n\t/usr/local/go/src/testing/testing.go:2036 +0x21d\ntesting.runTests({0x3f8d09a, 0x14}, {0x3fcef04, 0x2e}, 0xc000528990, {0x5de2340, 0x5, 0x5}, {0xc28faffdb016090d, 0x8bb5aed49a, ...})\n\t/usr/local/go/src/testing/testing.go:2583 +0x9ea\ntesting.(*M).Run(0xc0005428c0)\n\t/usr/local/go/src/testing/testing.go:2443 +0xf4c\nmain.main()\n\t_testmain.go:54 +0x165\n\ngoroutine 30 [chan receive, 9 minutes]:\ntesting.(*T).Run(0xc0005b0008, {0x3883f14, 0x11}, 0xc0005282b8)\n\t/usr/local/go/src/testing/testing.go:2109 +0xb3e\ngithub.com/juju/tc.(*suiteRunner).run(0xc00053c050, 0xc0005b0008)\n\t/home/jenkins/go/pkg/mod/github.com/juju/tc@v0.0.0-20251023013639-77c6a1d20e5a/check.go:183 +0x371\ngithub.com/juju/tc.Run(0xc0005b0008, {0x3ea77c0, 0xc0004a0080})\n\t/home/jenkins/go/pkg/mod/github.com/juju/tc@v0.0.0-20251023013639-77c6a1d20e5a/run.go:90 +0x4f\ngithub.com/juju/juju/internal/worker/sshserver.TestManifoldSuite.func1(0xc0005b0008)\n\t/home/jenkins/go/src/github.com/juju/juju/internal/worker/sshserver/manifold_test.go:35 +0x9c\ngithub.com/juju/juju/internal/testhelpers.PrintGoroutineLeaks(0xc0005b0008, 0x40c29a8)\n\t/home/jenkins/go/src/github.com/juju/juju/internal/testhelpers/goleak.go:87 +0x19a\ngithub.com/juju/juju/internal/worker/sshserver.TestManifoldSuite(0xc0005b0008)\n\t/home/jenkins/go/src/github.com/juju/juju/internal/worker/sshserver/manifold_test.go:34 +0x2e\ntesting.tRunner(0xc0005b0008, 0x40c27d0)\n\t/usr/local/go/src/testing/testing.go:2036 +0x21d\ncreated by testing.(*T).Run in goroutine 1\n\t/usr/local/go/src/testing/testing.go:2101 +0xb13\n\ngoroutine 31 [chan receive, 9 minutes]:\ngithub.com/juju/juju/internal/testhelpers.leakSentinel(...)\n\t/home/jenkins/go/src/github.com/juju/juju/internal/testhelpers/goleak.go:91\ncreated by github.com/juju/juju/internal/testhelpers.PrintGoroutineLeaks in goroutine 30\n\t/home/jenkins/go/src/github.com/juju/juju/internal/testhelpers/goleak.go:42 +0xec\n\ngoroutine 33 [select, 9 minutes]:\ngithub.com/juju/worker/v5/workertest.CheckKilled({0x410d620, 0xc000057b80}, {0x40e0038, 0xc000414600})\n\t/home/jenkins/go/pkg/mod/github.com/juju/worker/v5@v5.0.0/workertest/check.go:68 +0x25a\ngithub.com/juju/worker/v5/workertest.CheckKill({0x410d620, 0xc000057b80}, {0x40e0038, 0xc000414600})\n\t/home/jenkins/go/pkg/mod/github.com/juju/worker/v5@v5.0.0/workertest/check.go:86 +0x65\ngithub.com/juju/worker/v5/workertest.CleanKill({0x410d620, 0xc000057b80}, {0x40e0038, 0xc000414600})\n\t/home/jenkins/go/pkg/mod/github.com/juju/worker/v5@v5.0.0/workertest/check.go:101 +0x5f\ngithub.com/juju/juju/internal/worker/sshserver.(*manifoldSuite).TestManifoldStart(0xc0004a0080, 0xc000057b80)\n\t/home/jenkins/go/src/github.com/juju/juju/internal/worker/sshserver/manifold_test.go:123 +0xb0d\nreflect.Value.call({0x3ea77c0?, 0xc0004a0080?, 0xc000633b60?}, {0x3f6fcd5, 0x4}, {0xc000633cc8, 0x1, 0x55773e?})\n\t/usr/local/go/src/reflect/value.go:586 +0x1232\nreflect.Value.Call({0x3ea77c0?, 0xc0004a0080?, 0x0?}, {0xc000633cc8, 0x1, 0x1})\n\t/usr/local/go/src/reflect/value.go:369 +0xb6\ngithub.com/juju/tc.(*methodType).Call(0xc0003d8690, 0xc000057b80)\n\t/home/jenkins/go/pkg/mod/github.com/juju/tc@v0.0.0-20251023013639-77c6a1d20e5a/check.go:88 +0x2af\ngithub.com/juju/tc.(*suiteRunner).runTest(0xc00053c050, 0xc0005b0d88, 0xc0003d8690)\n\t/home/jenkins/go/pkg/mod/github.com/juju/tc@v0.0.0-20251023013639-77c6a1d20e5a/check.go:225 +0x626\ngithub.com/juju/tc.(*suiteRunner).run.func3(0xc0005b0d88)\n\t/home/jenkins/go/pkg/mod/github.com/juju/tc@v0.0.0-20251023013639-77c6a1d20e5a/check.go:184 +0x45\ntesting.tRunner(0xc0005b0d88, 0xc0005282b8)\n\t/usr/local/go/src/testing/testing.go:2036 +0x21d\ncreated by testing.(*T).Run in goroutine 30\n\t/usr/local/go/src/testing/testing.go:2101 +0xb13\n\ngoroutine 66 [chan receive, 9 minutes]:\ngopkg.in/tomb%2ev2.(*Tomb).Wait(0xc000414600)\n\t/home/jenkins/go/pkg/mod/gopkg.in/tomb.v2@v2.0.0-20161208151619-d5d1b5820637/tomb.go:126 +0x4f\ngithub.com/juju/worker/v5/catacomb.(*Catacomb).Wait(...)\n\t/home/jenkins/go/pkg/mod/github.com/juju/worker/v5@v5.0.0/catacomb/catacomb.go:219\ngithub.com/juju/juju/internal/worker/sshserver.(*serverWrapperWorker).Wait(0xc000414600)\n\t/home/jenkins/go/src/github.com/juju/juju/internal/worker/sshserver/worker.go:117 +0x29\ngithub.com/juju/worker/v5/workertest.CheckKilled.func1()\n\t/home/jenkins/go/pkg/mod/github.com/juju/worker/v5@v5.0.0/workertest/check.go:64 +0x43\ncreated by github.com/juju/worker/v5/workertest.CheckKilled in goroutine 33\n\t/home/jenkins/go/pkg/mod/github.com/juju/worker/v5@v5.0.0/workertest/check.go:63 +0x131\nFAIL\tgithub.com/juju/juju/internal/worker/sshserver\t600.168s\n```\n\n### Juju version\n\n4.0.12\n\n### Cloud\n\n_No response_\n\n### Expected behaviour\n\nTest passes\n\n### Reproduce / Test\n\nCI test.\n\n### Notes & References\n\n_No response_",
-      "labels": [
-        "kind/bug",
-        "triaged",
-        "4.1"
-      ],
-      "kind": "bug",
-      "area": "Testing / CI",
-      "versions": [
-        "4.1"
-      ],
-      "states": [],
-      "triaged": true,
-      "needs_triage": false,
-      "author": "nvinuesa",
-      "created": "2026-07-21",
-      "updated": "2026-07-23",
-      "comments": 3,
-      "url": "https://github.com/juju/juju/issues/22944",
-      "duplicates": [
-        {
-          "number": 23242,
-          "title": "Flaky TestWatchRelationEgressNetworks failure",
-          "score": 0.5,
-          "source": "auto",
-          "confidence": 1
-        }
-      ],
-      "resolution": {
-        "verdict": "likely-resolved",
-        "evidence": "Missing ControllerConfig gomock expectation fixed — no more Goexit inside the catacomb goroutine (internal/worker/sshserver/manifold_test.go:222; commit fe69f4c0e67). Caveat: fix predates the filing; the July flake may have been on the 4.1 branch.",
-        "assessed_at": "2026-11-11",
-        "checkout": "0483b81440",
-        "method": "code inspection only, no testing"
-      }
     },
     {
       "number": 22934,
