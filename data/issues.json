@@ -2,7 +2,7 @@
   "repo": "juju/juju",
   "state": "open",
   "generated_at": "2026-11-11",
-  "count": 380,
+  "count": 378,
   "issues": [
     {
       "number": 23804,
@@ -3740,45 +3740,6 @@
       }
     },
     {
-      "number": 22521,
-      "title": "Flaky test in cmd/juju/secrets",
-      "body": "### Description\n\nFlaky test failure caught in jenkins:\n```\n--- FAIL: TestListSuite (0.01s)\n    --- FAIL: TestListSuite/TestListWithRevisionsUnitFilterYAML (0.01s)\n        /home/jenkins/go/src/github.com/juju/juju/cmd/juju/secrets/list_test.go:173\n        list_test.go:221: \n                c.Assert(out, tc.Equals, fmt.Sprintf(`%s:\n                  revision: 1\n                  rotation: never\n                  owner: traefik-k8s/0\n                  label: afd8c2bccf834997afce12c2706d2ede-private-key-0-certificates\n                  created: 0001-01-01T00:00:00Z\n                  updated: 0001-01-01T00:00:00Z\n                  revisions:\n                  - revision: 1\n                    backend: alvinmini410model3-local\n                    created: 0001-01-01T00:00:00Z\n                    updated: 0001-01-01T00:00:00Z\n                %s:\n                  revision: 1\n                  rotation: never\n                  owner: traefik-k8s/1\n                  label: dsajnjsdandjwajwdnjwndjw-private-key-0-certificates\n                  created: 0001-01-01T00:00:00Z\n                  updated: 0001-01-01T00:00:00Z\n                  revisions:\n                  - revision: 1\n                    backend: alvinmini410model3-local\n                    created: 0001-01-01T00:00:00Z\n                    updated: 0001-01-01T00:00:00Z\n                `, uris[0].ID, uris[1].ID))\n            ... obtained string = \"\" +\n            ...     \"9h14v64781k2gpse78r0:\\n\" +\n            ...     \"  revision: 1\\n\" +\n            ...     \"  rotation: never\\n\" +\n            ...     \"  owner: traefik-k8s/1\\n\" +\n            ...     \"  label: dsajnjsdandjwajwdnjwndjw-private-key-0-certificates\\n\" +\n            ...     \"  created: 0001-01-01T00:00:00Z\\n\" +\n            ...     \"  updated: 0001-01-01T00:00:00Z\\n\" +\n            ...     \"  revisions:\\n\" +\n            ...     \"  - revision: 1\\n\" +\n            ...     \"    backend: alvinmini410model3-local\\n\" +\n            ...     \"    created: 0001-01-01T00:00:00Z\\n\" +\n            ...     \"    updated: 0001-01-01T00:00:00Z\\n\" +\n            ...     \"429l6gmlt4igv0gtk11g:\\n\" +\n            ...     \"  revision: 1\\n\" +\n            ...     \"  rotation: never\\n\" +\n            ...     \"  owner: traefik-k8s/0\\n\" +\n            ...     \"  label: afd8c2bccf834997afce12c2706d2ede-private-key-0-certificates\\n\" +\n            ...     \"  created: 0001-01-01T00:00:00Z\\n\" +\n            ...     \"  updated: 0001-01-01T00:00:00Z\\n\" +\n            ...     \"  revisions:\\n\" +\n            ...     \"  - revision: 1\\n\" +\n            ...     \"    backend: alvinmini410model3-local\\n\" +\n            ...     \"    created: 0001-01-01T00:00:00Z\\n\" +\n            ...     \"    updated: 0001-01-01T00:00:00Z\\n\"\n            ... expected string = \"\" +\n            ...     \"429l6gmlt4igv0gtk11g:\\n\" +\n            ...     \"  revision: 1\\n\" +\n            ...     \"  rotation: never\\n\" +\n            ...     \"  owner: traefik-k8s/0\\n\" +\n            ...     \"  label: afd8c2bccf834997afce12c2706d2ede-private-key-0-certificates\\n\" +\n            ...     \"  created: 0001-01-01T00:00:00Z\\n\" +\n            ...     \"  updated: 0001-01-01T00:00:00Z\\n\" +\n            ...     \"  revisions:\\n\" +\n            ...     \"  - revision: 1\\n\" +\n            ...     \"    backend: alvinmini410model3-local\\n\" +\n            ...     \"    created: 0001-01-01T00:00:00Z\\n\" +\n            ...     \"    updated: 0001-01-01T00:00:00Z\\n\" +\n            ...     \"9h14v64781k2gpse78r0:\\n\" +\n            ...     \"  revision: 1\\n\" +\n            ...     \"  rotation: never\\n\" +\n            ...     \"  owner: traefik-k8s/1\\n\" +\n            ...     \"  label: dsajnjsdandjwajwdnjwndjw-private-key-0-certificates\\n\" +\n            ...     \"  created: 0001-01-01T00:00:00Z\\n\" +\n            ...     \"  updated: 0001-01-01T00:00:00Z\\n\" +\n            ...     \"  revisions:\\n\" +\n            ...     \"  - revision: 1\\n\" +\n            ...     \"    backend: alvinmini410model3-local\\n\" +\n            ...     \"    created: 0001-01-01T00:00:00Z\\n\" +\n            ...     \"    updated: 0001-01-01T00:00:00Z\\n\"\n            ... string difference:\n            ...     [0]: \"9h14v64781k2gpse78r0:\" != \"429l6gmlt4igv0gtk11g:\"\n            ...     [3]: \"  owner: traefik-k8s/1\" != \"  owner: traefik-k8s/0\"\n            ...     [4]: \"  label: dsajnjsdandjwajwdnjwndjw-private-key-0-certificates\" != \"  label: afd8c2bccf834997afce12c2706d2ede-private-key-0-certificates\"\n            ...     [12]: \"429l6gmlt4igv0gtk11g:\" != \"9h14v64781k2gpse78r0:\"\n            ...     [15]: \"  owner: traefik-k8s/0\" != \"  owner: traefik-k8s/1\"\n            ...     [16]: \"  label: afd8c2bccf834997afce12c2706d2ede-private-key-0-certificates\" != \"  label: dsajnjsdandjwajwdnjwndjw-private-key-0-certificates\"\nFAIL\nFAIL\tgithub.com/juju/juju/cmd/juju/secrets\t0.084s\n```\n\n### Juju version\n\n4.0.10\n\n### Cloud\n\n_No response_\n\n### Expected behaviour\n\nThe test should pass systematically on CI.\n\n### Reproduce / Test\n\ngo test ./cmd/juju/secrets/...\n\n### Notes & References\n\n_No response_",
-      "labels": [
-        "kind/bug",
-        "4.0",
-        "triaged"
-      ],
-      "kind": "bug",
-      "area": "Secrets",
-      "versions": [
-        "4.0"
-      ],
-      "states": [],
-      "triaged": true,
-      "needs_triage": false,
-      "author": "nvinuesa",
-      "created": "2026-05-29",
-      "updated": "2026-06-01",
-      "comments": 1,
-      "url": "https://github.com/juju/juju/issues/22521",
-      "duplicates": [
-        {
-          "number": 22442,
-          "title": "Intermittent cmd/juju/secrets failure",
-          "score": null,
-          "source": "curated",
-          "confidence": 5
-        }
-      ],
-      "resolution": {
-        "verdict": "likely-resolved",
-        "evidence": "Whole-output assert replaced with order-agnostic contains assertions (cmd/juju/secrets/list_test.go:218; commit 887eb417c70, May 2026).",
-        "assessed_at": "2026-11-11",
-        "checkout": "0483b81440",
-        "method": "code inspection only, no testing"
-      }
-    },
-    {
       "number": 22511,
       "title": "Existing docs for contributors are incomplete",
       "body": "### Inquiry\n\nI was looking on how to contribute a bug fix to the Juju code base for my first time. Initially, I started exploring the docs in the repo, with and without LLM guidance and the only relevant part was `CONTRIBUTING.md`. While it contains some information, it is incomplete in many ways.\n\n### Improvement\n\nTo begin with, this is a list of things that the docs didn't guide me as expected:\n\n* **Requirements for the testing sandbox:** I had to figure out on my own that a 4-core, 8GB VM was necessary to build Juju. It is not obvious to newcomers that there is a need for a beefy system for such an action.\n* **The Makefile targets needed for QA:** It is unclear which targets are needed for each kind of QA, and there is no mention of how narrowing down the build to amd64 Linux speeds things up dramatically. The documentation should clarify the differences and use cases between:\n* `make install` vs `make juju jujud`\n* `make juju jujud` vs `GOOS=linux GOARCH=amd64 make juju jujud`\n\n* **Bootstrapping a Juju controller with a binary from a branch:** This can currently only be found hidden inside `juju bootstrap --help`, but nowhere else, making it really hard for a newcomer to discover. It should be explicitly highlighted in the guides, for example:\n\n```bash\njuju bootstrap lxd qa-controller --build-agent --bootstrap-base=ubuntu@24.04\n```\n\n\n\nIn addition, having dedicated docs sections for contributing—perhaps rendered under a ReadTheDocs (RTD) mini-site—would make it even friendlier for people to contribute code. The sections could include:\n\n* Examples of contributions (mini-features, bug fixes)\n* Examples of QA on PRs\n* Other contributor guidelines\n\n### Documentation File\n\nCONTRIBUTING.md\n\n### Notes & References\n\n_No response_",
@@ -3956,15 +3917,7 @@
       "updated": "2026-05-19",
       "comments": 0,
       "url": "https://github.com/juju/juju/issues/22442",
-      "duplicates": [
-        {
-          "number": 22521,
-          "title": "Flaky test in cmd/juju/secrets",
-          "score": null,
-          "source": "curated",
-          "confidence": 5
-        }
-      ]
+      "duplicates": []
     },
     {
       "number": 22435,
@@ -4062,52 +4015,6 @@
       "duplicates": []
     },
     {
-      "number": 22397,
-      "title": "Flaky test TestOneChangeWithDelayedTermDone",
-      "body": "### Description\n\n```\npanic: test timed out after 10m0s\n\trunning tests:\n\t\tTestStreamSuite (10m0s)\n\t\tTestStreamSuite/TestOneChangeWithDelayedTermDone (9m55s)\n\ngoroutine 5242 [running]:\ntesting.(*M).startAlarm.func1()\n\t/usr/local/go/src/testing/testing.go:2802 +0x605\ncreated by time.goFunc\n\t/usr/local/go/src/time/sleep.go:215 +0x45\n\ngoroutine 1 [chan receive, 9 minutes]:\ntesting.(*T).Run(0xc00046e008, {0x123eebb, 0xf}, 0x129f8c8)\n\t/usr/local/go/src/testing/testing.go:2109 +0xb3e\ntesting.runTests.func1(0xc00046e008)\n\t/usr/local/go/src/testing/testing.go:2585 +0x86\ntesting.tRunner(0xc00046e008, 0xc00036bad0)\n\t/usr/local/go/src/testing/testing.go:2036 +0x21d\ntesting.runTests({0x1243cc6, 0x14}, {0x125f850, 0x31}, 0xc000400378, {0x1b0d2b0, 0x1, 0x1}, {0xc27697d336019f6a, 0x8bb3b693f3, ...})\n\t/usr/local/go/src/testing/testing.go:2583 +0x9ea\ntesting.(*M).Run(0xc0004320a0)\n\t/usr/local/go/src/testing/testing.go:2443 +0xf4c\nmain.main()\n\t_testmain.go:46 +0x165\n\ngoroutine 34 [chan receive, 9 minutes]:\ntesting.(*T).Run(0xc00046e248, {0x10bcd62, 0x20}, 0xc000137e30)\n\t/usr/local/go/src/testing/testing.go:2109 +0xb3e\ngithub.com/juju/tc.(*suiteRunner).run(0xc00042e2d0, 0xc00046e248)\n\t/home/jenkins/go/pkg/mod/github.com/juju/tc@v0.0.0-20251023013639-77c6a1d20e5a/check.go:183 +0x371\ngithub.com/juju/tc.Run(0xc00046e248, {0x122f980, 0xc00045a0e0})\n\t/home/jenkins/go/pkg/mod/github.com/juju/tc@v0.0.0-20251023013639-77c6a1d20e5a/run.go:90 +0x4f\ngithub.com/juju/juju/internal/changestream/stream.TestStreamSuite(0xc00046e248)\n\t/home/jenkins/go/src/github.com/juju/juju/internal/changestream/stream/stream_test.go:42 +0xf8\ntesting.tRunner(0xc00046e248, 0x129f8c8)\n\t/usr/local/go/src/testing/testing.go:2036 +0x21d\ncreated by testing.(*T).Run in goroutine 1\n\t/usr/local/go/src/testing/testing.go:2101 +0xb13\n\ngoroutine 4865 [select, 9 minutes]:\ngithub.com/juju/worker/v5/workertest.CheckKilled({0x12b5540, 0xc0001399c0}, {0x12acfe8, 0xc00026c400})\n\t/home/jenkins/go/pkg/mod/github.com/juju/worker/v5@v5.0.0/workertest/check.go:68 +0x25a\ngithub.com/juju/worker/v5/workertest.CheckKill({0x12b5540, 0xc0001399c0}, {0x12acfe8, 0xc00026c400})\n\t/home/jenkins/go/pkg/mod/github.com/juju/worker/v5@v5.0.0/workertest/check.go:86 +0x65\ngithub.com/juju/worker/v5/workertest.CleanKill({0x12b5540, 0xc0001399c0}, {0x12acfe8, 0xc00026c400})\n\t/home/jenkins/go/pkg/mod/github.com/juju/worker/v5@v5.0.0/workertest/check.go:101 +0x5f\ngithub.com/juju/juju/internal/changestream/stream.(*streamSuite).TestOneChangeWithDelayedTermDone(0xc00045a0e0, 0xc0001399c0)\n\t/home/jenkins/go/src/github.com/juju/juju/internal/changestream/stream/stream_test.go:294 +0x799\nreflect.Value.call({0x122f980?, 0xc00045a0e0?, 0xc00048db60?}, {0x1234cd3, 0x4}, {0xc00048dcc8, 0x1, 0x55309e?})\n\t/usr/local/go/src/reflect/value.go:586 +0x1225\nreflect.Value.Call({0x122f980?, 0xc00045a0e0?, 0x0?}, {0xc00048dcc8, 0x1, 0x1})\n\t/usr/local/go/src/reflect/value.go:369 +0xb6\ngithub.com/juju/tc.(*methodType).Call(0xc0004132d0, 0xc0001399c0)\n\t/home/jenkins/go/pkg/mod/github.com/juju/tc@v0.0.0-20251023013639-77c6a1d20e5a/check.go:88 +0x2af\ngithub.com/juju/tc.(*suiteRunner).runTest(0xc00042e2d0, 0xc00030c248, 0xc0004132d0)\n\t/home/jenkins/go/pkg/mod/github.com/juju/tc@v0.0.0-20251023013639-77c6a1d20e5a/check.go:225 +0x626\ngithub.com/juju/tc.(*suiteRunner).run.func3(0xc00030c248)\n\t/home/jenkins/go/pkg/mod/github.com/juju/tc@v0.0.0-20251023013639-77c6a1d20e5a/check.go:184 +0x45\ntesting.tRunner(0xc00030c248, 0xc000137e30)\n\t/usr/local/go/src/testing/testing.go:2036 +0x21d\ncreated by testing.(*T).Run in goroutine 34\n\t/usr/local/go/src/testing/testing.go:2101 +0xb13\n\ngoroutine 4866 [select, 9 minutes]:\ndatabase/sql.(*DB).connectionOpener(0xc000389ad0, {0x12b2038, 0xc000229d10})\n\t/usr/local/go/src/database/sql/sql.go:1261 +0xed\ncreated by database/sql.OpenDB in goroutine 4865\n\t/usr/local/go/src/database/sql/sql.go:841 +0x287\n\ngoroutine 5241 [chan receive, 9 minutes]:\ngopkg.in/tomb%2ev2.(*Tomb).Wait(0xc00026c408)\n\t/home/jenkins/go/pkg/mod/gopkg.in/tomb.v2@v2.0.0-20161208151619-d5d1b5820637/tomb.go:126 +0x4f\ngithub.com/juju/juju/internal/changestream/stream.(*Stream).Wait(0xc00026c400)\n\t/home/jenkins/go/src/github.com/juju/juju/internal/changestream/stream/stream.go:220 +0x2d\ngithub.com/juju/worker/v5/workertest.CheckKilled.func1()\n\t/home/jenkins/go/pkg/mod/github.com/juju/worker/v5@v5.0.0/workertest/check.go:64 +0x43\ncreated by github.com/juju/worker/v5/workertest.CheckKilled in goroutine 4865\n\t/home/jenkins/go/pkg/mod/github.com/juju/worker/v5@v5.0.0/workertest/check.go:63 +0x131\nFAIL\tgithub.com/juju/juju/internal/changestream/stream\t600.036s\n```\n\n### Juju version\n\n4.0.9\n\n### Cloud\n\n_No response_\n\n### Expected behaviour\n\nTests should pass systematically\n\n### Reproduce / Test\n\ngo test ./internal/changestream/stream -race\n\n### Notes & References\n\n_No response_",
-      "labels": [
-        "kind/bug",
-        "4.0",
-        "triaged"
-      ],
-      "kind": "bug",
-      "area": "Testing / CI",
-      "versions": [
-        "4.0"
-      ],
-      "states": [],
-      "triaged": true,
-      "needs_triage": false,
-      "author": "nvinuesa",
-      "created": "2026-05-05",
-      "updated": "2026-05-20",
-      "comments": 1,
-      "url": "https://github.com/juju/juju/issues/22397",
-      "duplicates": [
-        {
-          "number": 22374,
-          "title": "Flaky test TestReconnectWithBrokenConnectionMultipleUpdatesKeepProgress",
-          "score": 0.53,
-          "source": "auto",
-          "confidence": 2
-        },
-        {
-          "number": 22322,
-          "title": "Flaky test TestRelationRemovedNotifiesOfferingModel",
-          "score": 0.5,
-          "source": "auto",
-          "confidence": 1
-        }
-      ],
-      "resolution": {
-        "verdict": "likely-resolved",
-        "evidence": "Backoff-mock deadlock fixed: expectAfterWithoutTermTimeout handles both term-timeout and backoff paths (internal/changestream/stream/stream_test.go:261; commit f3e11b3bb47, Jul 2026).",
-        "assessed_at": "2026-11-11",
-        "checkout": "0483b81440",
-        "method": "code inspection only, no testing"
-      }
-    },
-    {
       "number": 22374,
       "title": "Flaky test TestReconnectWithBrokenConnectionMultipleUpdatesKeepProgress",
       "body": "### Description\n\nThe test `TestReconnectWithBrokenConnectionMultipleUpdatesKeepProgress` has been seen to fail on jenkins. From this https://jenkins.juju.canonical.com/job/github-make-check-juju/36391/consoleText run on a PR targeting main:\n```\npanic: test timed out after 10m0s\n    running tests:\n        TestRemoteSuite (10m0s)\n        TestRemoteSuite/TestReconnectWithBrokenConnectionMultipleUpdatesKeepProgress (10m0s)\n\ngoroutine 102 [running]:\ntesting.(*M).startAlarm.func1()\n    /usr/local/go/src/testing/testing.go:2802 +0x605\ncreated by time.goFunc\n    /usr/local/go/src/time/sleep.go:215 +0x45\n\ngoroutine 1 [chan receive, 10 minutes]:\ntesting.(*T).Run(0xc000664fc8, {0x3feb364, 0xf}, 0x4142f50)\n    /usr/local/go/src/testing/testing.go:2109 +0xb3e\ntesting.runTests.func1(0xc000664fc8)\n    /usr/local/go/src/testing/testing.go:2585 +0x86\ntesting.tRunner(0xc000664fc8, 0xc0006b5ad0)\n    /usr/local/go/src/testing/testing.go:2036 +0x21d\ntesting.runTests({0x3ff6c6c, 0x14}, {0x404cd7f, 0x34}, 0xc000407ce0, {0x5ea4900, 0x3, 0x3}, {0xc27497252dab341f, 0x8bb6d45cb5, ...})\n    /usr/local/go/src/testing/testing.go:2583 +0x9ea\ntesting.(*M).Run(0xc00059c3c0)\n    /usr/local/go/src/testing/testing.go:2443 +0xf4c\nmain.main()\n    _testmain.go:50 +0x165\n\ngoroutine 71 [chan receive, 10 minutes]:\ntesting.(*T).Run(0xc0006e0008, {0x3a17a6f, 0x3c}, 0xc000016378)\n    /usr/local/go/src/testing/testing.go:2109 +0xb3e\ngithub.com/juju/tc.(*suiteRunner).run(0xc000562000, 0xc0006e0008)\n    /home/jenkins/go/pkg/mod/github.com/juju/tc@v0.0.0-20251023013639-77c6a1d20e5a/check.go:183 +0x371\ngithub.com/juju/tc.Run(0xc0006e0008, {0x3f65ca0, 0xc0001e7c30})\n    /home/jenkins/go/pkg/mod/github.com/juju/tc@v0.0.0-20251023013639-77c6a1d20e5a/run.go:90 +0x4f\ngithub.com/juju/juju/internal/worker/apiremotecaller.TestRemoteSuite(0xc0006e0008)\n    /home/jenkins/go/src/github.com/juju/juju/internal/worker/apiremotecaller/remote_test.go:36 +0x108\ntesting.tRunner(0xc0006e0008, 0x4142f50)\n    /usr/local/go/src/testing/testing.go:2036 +0x21d\ncreated by testing.(*T).Run in goroutine 1\n    /usr/local/go/src/testing/testing.go:2101 +0xb13\n\ngoroutine 75 [select, 10 minutes]:\ngithub.com/juju/worker/v5/workertest.CheckKilled({0x418e2a0, 0xc00036a040}, {0x7559d9566940, 0xc0006f6420})\n    /home/jenkins/go/pkg/mod/github.com/juju/worker/v5@v5.0.0/workertest/check.go:68 +0x25a\ngithub.com/juju/worker/v5/workertest.CheckKill({0x418e2a0, 0xc00036a040}, {0x7559d9566940, 0xc0006f6420})\n    /home/jenkins/go/pkg/mod/github.com/juju/worker/v5@v5.0.0/workertest/check.go:86 +0x65\ngithub.com/juju/worker/v5/workertest.DirtyKill({0x418e2a0, 0xc00036a040}, {0x7559d9566940, 0xc0006f6420})\n    /home/jenkins/go/pkg/mod/github.com/juju/worker/v5@v5.0.0/workertest/check.go:117 +0x5b\nruntime.Goexit()\n    /usr/local/go/src/runtime/panic.go:694 +0x5e\ntesting.(*common).FailNow(0xc0003ae248)\n    /usr/local/go/src/testing/testing.go:1022 +0x7b\ngithub.com/juju/tc.(*C).Assert(0xc00036a040, {0x39c8020, 0xc0001bfba8}, {0x4161a58, 0x5e83888}, {0xc0000333c0, 0x1, 0x1})\n    /home/jenkins/go/pkg/mod/github.com/juju/tc@v0.0.0-20251023013639-77c6a1d20e5a/helpers.go:106 +0xe8\ngithub.com/juju/juju/internal/worker/apiremotecaller.(*RemoteSuite).TestReconnectWithBrokenConnectionMultipleUpdatesKeepProgress(0xc0001e7c30, 0xc00036a040)\n    /home/jenkins/go/src/github.com/juju/juju/internal/worker/apiremotecaller/remote_test.go:563 +0x19c5\nreflect.Value.call({0x3f65ca0?, 0xc0001e7c30?, 0xc000033b60?}, {0x3fd90fd, 0x4}, {0xc000033cc8, 0x1, 0x556c5e?})\n    /usr/local/go/src/reflect/value.go:586 +0x1225\nreflect.Value.Call({0x3f65ca0?, 0xc0001e7c30?, 0x0?}, {0xc000033cc8, 0x1, 0x1})\n    /usr/local/go/src/reflect/value.go:369 +0xb6\ngithub.com/juju/tc.(*methodType).Call(0xc00037ea10, 0xc00036a040)\n    /home/jenkins/go/pkg/mod/github.com/juju/tc@v0.0.0-20251023013639-77c6a1d20e5a/check.go:88 +0x2af\ngithub.com/juju/tc.(*suiteRunner).runTest(0xc000562000, 0xc0003ae248, 0xc00037ea10)\n    /home/jenkins/go/pkg/mod/github.com/juju/tc@v0.0.0-20251023013639-77c6a1d20e5a/check.go:225 +0x626\ngithub.com/juju/tc.(*suiteRunner).run.func3(0xc0003ae248)\n    /home/jenkins/go/pkg/mod/github.com/juju/tc@v0.0.0-20251023013639-77c6a1d20e5a/check.go:184 +0x45\ntesting.tRunner(0xc0003ae248, 0xc000016378)\n    /usr/local/go/src/testing/testing.go:2036 +0x21d\ncreated by testing.(*T).Run in goroutine 71\n    /usr/local/go/src/testing/testing.go:2101 +0xb13\n\ngoroutine 135 [chan receive, 10 minutes]:\ngopkg.in/tomb%2ev2.(*Tomb).Wait(0xc0006f6428)\n    /home/jenkins/go/pkg/mod/gopkg.in/tomb.v2@v2.0.0-20161208151619-d5d1b5820637/tomb.go:126 +0x4f\ngithub.com/juju/juju/internal/worker/apiremotecaller.(*remoteServer).Wait(0xc0006f6420)\n    /home/jenkins/go/src/github.com/juju/juju/internal/worker/apiremotecaller/remote.go:149 +0x2d\ngithub.com/juju/worker/v5/workertest.CheckKilled.func1()\n    /home/jenkins/go/pkg/mod/github.com/juju/worker/v5@v5.0.0/workertest/check.go:64 +0x43\ncreated by github.com/juju/worker/v5/workertest.CheckKilled in goroutine 75\n    /home/jenkins/go/pkg/mod/github.com/juju/worker/v5@v5.0.0/workertest/check.go:63 +0x131\n```\n\n### Juju version\n\n4.1, but could also be happening on 4.0\n\n### Cloud\n\n_No response_\n\n### Expected behaviour\n\nThe test should pass systematically.\n\n### Reproduce / Test\n\ngo test ./internal/worker/apiremotecaller/... -run TestRemoteSuite/TestReconnectWithBrokenConnectionMultipleUpdatesKeepProgress -race\n\n### Notes & References\n\n_No response_",
@@ -4133,13 +4040,6 @@
       "comments": 3,
       "url": "https://github.com/juju/juju/issues/22374",
       "duplicates": [
-        {
-          "number": 22397,
-          "title": "Flaky test TestOneChangeWithDelayedTermDone",
-          "score": 0.53,
-          "source": "auto",
-          "confidence": 2
-        },
         {
           "number": 22322,
           "title": "Flaky test TestRelationRemovedNotifiesOfferingModel",
@@ -4330,13 +4230,6 @@
           "score": 0.52,
           "source": "auto",
           "confidence": 2
-        },
-        {
-          "number": 22397,
-          "title": "Flaky test TestOneChangeWithDelayedTermDone",
-          "score": 0.5,
-          "source": "auto",
-          "confidence": 1
         },
         {
           "number": 22374,
