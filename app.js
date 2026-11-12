@@ -85,6 +85,46 @@
 
   const state = { q: "", kind: "", area: "", versions: [], triage: "", staleness: [],
                   sort: "number-desc", dupsOnly: false, assessQ: "", assessVerdict: "" };
+  let activeTab = "issues";
+
+  function parseHash() {
+    const raw = (location.hash || "").replace(/^#/, "");
+    const [tab, query] = raw.split("?");
+    return { tab: tab || "issues", params: new URLSearchParams(query || "") };
+  }
+
+  function encodeState() {
+    const params = new URLSearchParams();
+    if (state.q) params.set("q", state.q);
+    if (state.kind) params.set("kind", state.kind);
+    if (state.area) params.set("area", state.area);
+    if (state.versions.length) params.set("branch", state.versions.join(","));
+    if (state.triage) params.set("triage", state.triage);
+    if (state.staleness.length) params.set("stale", state.staleness.join(","));
+    if (state.sort && state.sort !== "number-desc") params.set("sort", state.sort);
+    if (state.dupsOnly) params.set("dups", "1");
+    return params.toString();
+  }
+
+  function applyUrlState(params) {
+    if (![...params.keys()].length) return;
+    state.q = params.get("q") || "";
+    state.kind = params.get("kind") || "";
+    state.area = params.get("area") || "";
+    const branch = params.get("branch");
+    state.versions = branch ? branch.split(",") : [];
+    const stale = params.get("stale");
+    state.staleness = stale ? stale.split(",") : [];
+    state.triage = params.get("triage") || "";
+    const sort = params.get("sort");
+    state.sort = SORTS[sort] ? sort : "number-desc";
+    state.dupsOnly = params.get("dups") === "1";
+  }
+
+  function updateUrl() {
+    const query = encodeState();
+    history.replaceState(null, "", `#${activeTab}${query ? "?" + query : ""}`);
+  }
 
   function restoreState() {
     try {
@@ -308,6 +348,7 @@
       els.tbody.innerHTML =
         '<tr><td colspan="12" class="empty">No issues match the current filters.</td></tr>';
       saveState();
+      updateUrl();
       return;
     }
     const html = rows.map(r => {
@@ -349,6 +390,7 @@
     }).join("");
     els.tbody.innerHTML = html;
     saveState();
+    updateUrl();
   }
 
   function renderPairs() {
@@ -450,12 +492,8 @@
     assessment: { button: "tab-assessment", panel: "view-assessment" },
   };
 
-  function currentTab() {
-    return location.hash === "#duplicates" ? "duplicates"
-      : location.hash === "#assessment" ? "assessment" : "issues";
-  }
-
   function setTab(name) {
+    activeTab = name;
     for (const [key, ref] of Object.entries(TABS)) {
       const button = document.getElementById(ref.button);
       const panel = document.getElementById(ref.panel);
@@ -464,7 +502,7 @@
       button.setAttribute("aria-selected", active ? "true" : "false");
       panel.hidden = !active;
     }
-    history.replaceState(null, "", `#${name}`);
+    updateUrl();
   }
 
   function syncControls() {
@@ -509,7 +547,13 @@
   els.tabIssues.addEventListener("click", () => setTab("issues"));
   els.tabDups.addEventListener("click", () => setTab("duplicates"));
   els.tabAssessment.addEventListener("click", () => setTab("assessment"));
-  window.addEventListener("hashchange", () => setTab(currentTab()));
+  window.addEventListener("hashchange", () => {
+    const { tab, params } = parseHash();
+    applyUrlState(params);
+    setTab(tab);
+    syncControls();
+    render();
+  });
 
   let assessDebounce = null;
   els.assessSearch.addEventListener("input", () => {
@@ -533,12 +577,15 @@
     saveState();
   });
 
+  const initial = parseHash();
+  activeTab = initial.tab;
   restoreState();
+  applyUrlState(initial.params);
   buildControls();
   wireMultiSelects();
   syncControls();
   render();
   renderPairs();
   renderAssessment();
-  setTab(currentTab());
+  setTab(initial.tab);
 })();
