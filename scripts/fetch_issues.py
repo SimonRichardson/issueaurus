@@ -117,7 +117,8 @@ STATES = ["state/blocked", "state/in-progress", "state/incomplete",
            "state/will-not-fix", "state/wishlist", "state/workaround"]
 
 CSV_COLUMNS = ["number", "title", "kind", "area", "versions", "labels", "states",
-               "triaged", "needs_triage", "author", "created", "updated",
+               "triaged", "needs_triage", "author", "assignees", "assigned",
+               "in_progress", "staleness", "days_idle", "created", "updated",
                "comments", "duplicates", "resolution_verdict", "url"]
 
 ASSESSMENT_FILE = Path(__file__).resolve().parent / "resolution_assessment.json"
@@ -243,7 +244,26 @@ def fetch_raw(repo, state, per_page, max_pages):
     return [i for i in raw if "pull_request" not in i]
 
 
-def classify(issue):
+def staleness_of(assignees, in_progress, updated_iso, now, stale_days):
+    """Staleness model, in the two flavours requested:
+
+    - unassigned-stale: nobody owns it and nobody has touched it recently
+    - assigned-stale:    an assignee exists but no work signal (no
+      state/in-progress label, no activity) for at least `stale_days`
+    - in-progress:       declared work in progress, never marked stale
+    - fresh:             touched within `stale_days`
+    """
+    days_idle = (now - datetime.fromisoformat(updated_iso)).days
+    if in_progress:
+        return "in-progress", days_idle
+    if days_idle < stale_days:
+        return "fresh", days_idle
+    if assignees:
+        return "assigned-stale", days_idle
+    return "unassigned-stale", days_idle
+
+
+def classify(issue, now, stale_days):
     labels = [l["name"] for l in issue["labels"]]
     label_set = set(labels)
     title = issue["title"]
@@ -255,6 +275,9 @@ def classify(issue):
         area = next((name for name, pats in AREA_RULES
                      if any(re.search(p, title, re.I) for p in pats)), "Other / needs triage")
     kind = next((k.split("/", 1)[1] for k in KINDS if k in label_set), "-")
+    assignees = [a["login"] for a in issue.get("assignees") or []]
+    in_progress = "state/in-progress" in label_set
+    staleness, days_idle = staleness_of(assignees, in_progress, issue["updated_at"], now, stale_days)
     return {
         "number": issue["number"],
         "title": title,
@@ -267,6 +290,11 @@ def classify(issue):
         "triaged": "triaged" in label_set,
         "needs_triage": "needs-triage" in label_set,
         "author": (issue.get("user") or {}).get("login", "unknown"),
+        "assignees": assignees,
+        "assigned": bool(assignees),
+        "in_progress": in_progress,
+        "staleness": staleness,
+        "days_idle": days_idle,
         "created": issue["created_at"][:10],
         "updated": issue["updated_at"][:10],
         "comments": issue["comments"],
@@ -305,12 +333,13 @@ def attach_assessment(records, assessment):
     return attached, missing
 
 
-def write_outputs(records, out_dir, repo, state):
+def write_outputs(records, out_dir, repo, state, stale_days):
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     envelope = {
         "repo": repo,
         "state": state,
+        "stale_days": stale_days,
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         "count": len(records),
         "issues": records,
@@ -330,7 +359,9 @@ def write_outputs(records, out_dir, repo, state):
                 r["number"], r["title"], r["kind"], r["area"],
                 "|".join(r["versions"]), "|".join(r["labels"]),
                 "|".join(r["states"]), r["triaged"], r["needs_triage"],
-                r["author"], r["created"], r["updated"], r["comments"],
+                r["author"], "|".join(r["assignees"]), r["assigned"],
+                r["in_progress"], r["staleness"], r["days_idle"],
+                r["created"], r["updated"], r["comments"],
                 "|".join(f"#{d['number']}({d['confidence']}/5"
                          + (f",{d['score']}" if d["score"] is not None else ",curated") + ")"
                          for d in r["duplicates"]),
@@ -357,6 +388,7 @@ def print_summary(records):
         ("area", tally(lambda r: r["area"])),
         ("version", tally(lambda r: r["versions"])),
         ("triage", tally(lambda r: "triaged" if r["triaged"] else "needs-triage")),
+        ("staleness", tally(lambda r: r["staleness"])),
     ]:
         top = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
         print(f"{name:>8}: " + " · ".join(f"{k}: {v}" for k, v in top))
@@ -371,14 +403,17 @@ def main():
                         help="output directory (default: %(default)s)")
     parser.add_argument("--per-page", type=int, default=100, help="API page size")
     parser.add_argument("--max-pages", type=int, default=50, help="safety cap on pages fetched")
+    parser.add_argument("--stale-days", type=int, default=90,
+                        help="idle days before an issue counts as stale (default: %(default)s)")
     args = parser.parse_args()
 
     raw = fetch_raw(args.repo, args.state, args.per_page, args.max_pages)
-    records = [classify(i) for i in raw]
+    now = datetime.now(timezone.utc)
+    records = [classify(i, now, args.stale_days) for i in raw]
     pairs = detect_duplicates(records)
     assessment = load_assessment()
     attached, missing = attach_assessment(records, assessment)
-    envelope = write_outputs(records, args.out, args.repo, args.state)
+    envelope = write_outputs(records, args.out, args.repo, args.state, args.stale_days)
 
     out_dir = Path(args.out)
     print(f"repo: {envelope['repo']} · state: {envelope['state']} · issues: {envelope['count']}")

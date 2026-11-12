@@ -17,6 +17,9 @@
     versionField: document.getElementById("version-field"),
     versionMenu: document.getElementById("version-menu"),
     triage: document.getElementById("triage"),
+    staleness: document.getElementById("staleness"),
+    stalenessField: document.getElementById("staleness-field"),
+    stalenessMenu: document.getElementById("staleness-menu"),
     sort: document.getElementById("sort"),
     dups: document.getElementById("dups"),
     reset: document.getElementById("reset"),
@@ -66,8 +69,22 @@
     ["untriaged", "needs-triage"],
   ];
 
-  const state = { q: "", kind: "", area: "", versions: [], triage: "", sort: "number-desc",
-                  dupsOnly: false, assessQ: "", assessVerdict: "" };
+  const STALENESS_ORDER = ["fresh", "in-progress", "unassigned-stale", "assigned-stale"];
+  const STALENESS_LABELS = {
+    "fresh": "fresh",
+    "in-progress": "in progress",
+    "unassigned-stale": "stale · unassigned",
+    "assigned-stale": "stale · assigned",
+  };
+  const STALENESS_DOT = {
+    "fresh": "green",
+    "in-progress": "green",
+    "unassigned-stale": "red",
+    "assigned-stale": "yellow",
+  };
+
+  const state = { q: "", kind: "", area: "", versions: [], triage: "", staleness: [],
+                  sort: "number-desc", dupsOnly: false, assessQ: "", assessVerdict: "" };
 
   function restoreState() {
     try {
@@ -76,6 +93,10 @@
       if (saved.version) saved.versions = [saved.version];  // migrate old single-select
       delete saved.version;
       if (!Array.isArray(saved.versions)) saved.versions = [];
+      if (typeof saved.staleness === "string") {  // migrate old single-select
+        saved.staleness = saved.staleness ? [saved.staleness] : [];
+      }
+      if (!Array.isArray(saved.staleness)) saved.staleness = [];
       Object.assign(state, saved);
     } catch (e) { /* ignore */ }
   }
@@ -115,48 +136,63 @@
     return score(a) - score(b);
   }
 
-  function versionTriggerText() {
-    if (!state.versions.length) return "all branches";
-    const label = state.versions.slice().sort(versionSort).join(", ");
-    return label.length > 18 ? `${state.versions.length} branches` : label;
-  }
+  const MULTI_SELECTS = [];
 
-  function syncVersionMenu() {
-    els.version.textContent = versionTriggerText();
-    for (const item of els.versionMenu.children) {
+  function syncMulti(inst) {
+    inst.trigger.textContent = inst.summarize(state[inst.stateKey]);
+    for (const item of inst.menu.children) {
       const input = item.children[0];
-      if (input) input.checked = state.versions.includes(input.value);
+      if (input) input.checked = state[inst.stateKey].includes(input.value);
     }
   }
 
-  function buildVersionMenu() {
-    const versions = tally(i => i.versions);
-    els.versionMenu.innerHTML = "";
-    for (const v of [...versions.keys()].sort(versionSort)) {
+  function multiOpen(inst, open) {
+    inst.menu.hidden = !open;
+    inst.trigger.setAttribute("aria-expanded", String(open));
+  }
+
+  function makeMultiSelect(cfg) {
+    cfg.menu.innerHTML = "";
+    for (const item of cfg.items) {
       const label = document.createElement("label");
       label.className = "multi-item";
       const input = document.createElement("input");
       input.type = "checkbox";
-      input.value = v;
+      input.value = item.value;
       input.addEventListener("change", () => {
-        const next = new Set(state.versions);
-        input.checked ? next.add(v) : next.delete(v);
-        state.versions = [...versions.keys()].filter(x => next.has(x)).sort(versionSort);
-        syncVersionMenu();
+        const chosen = new Set(state[cfg.stateKey]);
+        input.checked ? chosen.add(item.value) : chosen.delete(item.value);
+        state[cfg.stateKey] = cfg.items.map(i => i.value).filter(v => chosen.has(v));
+        syncMulti(cfg);
         render();
+        saveState();
       });
       label.appendChild(input);
       const text = document.createElement("span");
-      text.textContent = `${v} (${versions.get(v)})`;
+      text.textContent = item.label;
       label.appendChild(text);
-      els.versionMenu.appendChild(label);
+      cfg.menu.appendChild(label);
     }
-    syncVersionMenu();
+    MULTI_SELECTS.push(cfg);
+    syncMulti(cfg);
   }
 
-  function setVersionMenuOpen(open) {
-    els.versionMenu.hidden = !open;
-    els.version.setAttribute("aria-expanded", String(open));
+  function wireMultiSelects() {
+    for (const inst of MULTI_SELECTS) {
+      inst.trigger.addEventListener("click", () => {
+        const willOpen = inst.menu.hidden;
+        for (const other of MULTI_SELECTS) if (other !== inst) multiOpen(other, false);
+        multiOpen(inst, willOpen);
+      });
+      inst.menu.addEventListener("keydown", e => {
+        if (e.key === "Escape") { multiOpen(inst, false); inst.trigger.focus(); }
+      });
+    }
+    document.addEventListener("click", e => {
+      for (const inst of MULTI_SELECTS) {
+        if (!inst.field.contains(e.target)) multiOpen(inst, false);
+      }
+    });
   }
 
   function buildControls() {
@@ -170,9 +206,35 @@
     fillSelect(els.area, "all areas",
       areaOrder.map(a => [a, `${a} (${areas.get(a)})`]));
 
-    buildVersionMenu();
+    const versions = tally(i => i.versions);
+    makeMultiSelect({
+      field: els.versionField,
+      trigger: els.version,
+      menu: els.versionMenu,
+      stateKey: "versions",
+      items: [...versions.keys()].sort(versionSort)
+        .map(v => ({ value: v, label: `${v} (${versions.get(v)})` })),
+      summarize: vals => {
+        if (!vals.length) return "all branches";
+        const label = vals.slice().sort(versionSort).join(", ");
+        return label.length > 18 ? `${vals.length} branches` : label;
+      },
+    });
 
     fillSelect(els.triage, "all", TRIAGE_OPTIONS);
+
+    const staleness = tally(i => [i.staleness]);
+    makeMultiSelect({
+      field: els.stalenessField,
+      trigger: els.staleness,
+      menu: els.stalenessMenu,
+      stateKey: "staleness",
+      items: STALENESS_ORDER.filter(v => staleness.has(v))
+        .map(v => ({ value: v, label: `${STALENESS_LABELS[v]} (${staleness.get(v)})` })),
+      summarize: vals => !vals.length ? "all states"
+        : vals.length === 1 ? STALENESS_LABELS[vals[0]]
+        : `${vals.length} selected`,
+    });
     fillSelect(els.sort, null, SORT_LABELS);
   }
 
@@ -182,6 +244,7 @@
     if (state.versions.length && !issue.versions.some(v => state.versions.includes(v))) return false;
     if (state.triage === "triaged" && !issue.triaged) return false;
     if (state.triage === "untriaged" && issue.triaged) return false;
+    if (state.staleness.length && !state.staleness.includes(issue.staleness)) return false;
     if (state.dupsOnly && !(issue.duplicates && issue.duplicates.length)) return false;
     if (state.q) {
       const hay = (issue.title + "\n" + issue.body + "\n" + issue.labels.join(" ")).toLowerCase();
@@ -243,7 +306,7 @@
     els.count.textContent = `Showing ${rows.length} of ${ISSUES.length} issues`;
     if (!rows.length) {
       els.tbody.innerHTML =
-        '<tr><td colspan="11" class="empty">No issues match the current filters.</td></tr>';
+        '<tr><td colspan="12" class="empty">No issues match the current filters.</td></tr>';
       saveState();
       return;
     }
@@ -262,6 +325,12 @@
       }).join(" ");
       const dot = r.triaged ? "triaged" : "untriaged";
       const tri = `<span class="dot ${dot}"></span>${r.triaged ? "triaged" : "needs-triage"}`;
+      const stale = r.staleness
+        ? `<span class="dot ${STALENESS_DOT[r.staleness] || "green"}" ` +
+          `title="${r.assignees.length ? "assigned to " + esc(r.assignees.join(", ")) : "unassigned"} · ${r.days_idle} days idle"></span>` +
+          `<span class="stale-text stale-${esc(r.staleness)}">${esc(STALENESS_LABELS[r.staleness] || r.staleness)}</span> ` +
+          `<span class="idle">${r.days_idle}d</span>`
+        : "";
       const excerpt = esc(r.body.slice(0, 200).replace(/\s+/g, " "));
       return `<tr>
         <td class="num"><a href="${esc(r.url)}" target="_blank" rel="noopener">${r.number}</a></td>
@@ -272,6 +341,7 @@
         <td class="labels">${labels}</td>
         <td class="dups">${dups}</td>
         <td>${tri}</td>
+        <td class="staleness">${stale}</td>
         <td class="date">${esc(r.created)}</td>
         <td class="date">${esc(r.updated)}</td>
         <td class="num">${r.comments || ""}</td>
@@ -406,7 +476,7 @@
     els.dups.checked = !!state.dupsOnly;
     els.assessSearch.value = state.assessQ;
     els.assessVerdict.value = state.assessVerdict;
-    syncVersionMenu();
+    for (const inst of MULTI_SELECTS) syncMulti(inst);
   }
 
   let debounce = null;
@@ -414,7 +484,7 @@
     clearTimeout(debounce);
     debounce = setTimeout(() => { state.q = els.search.value.trim(); render(); }, 120);
   });
-  for (const sel of [els.kind, els.area, els.version, els.triage]) {
+  for (const sel of [els.kind, els.area, els.triage]) {
     sel.addEventListener("change", () => {
       state[sel.id] = sel.value;
       render();
@@ -423,23 +493,10 @@
   els.sort.addEventListener("change", () => { state.sort = els.sort.value; render(); });
   els.dups.addEventListener("change", () => { state.dupsOnly = els.dups.checked; render(); });
   els.reset.addEventListener("click", () => {
-    Object.assign(state, { q: "", kind: "", area: "", versions: [], triage: "", sort: "number-desc", dupsOnly: false });
+    Object.assign(state, { q: "", kind: "", area: "", versions: [], triage: "", staleness: [], sort: "number-desc", dupsOnly: false });
     syncControls();
-    setVersionMenuOpen(false);
+    for (const inst of MULTI_SELECTS) multiOpen(inst, false);
     render();
-  });
-
-  els.version.addEventListener("click", () => {
-    setVersionMenuOpen(els.versionMenu.hidden);
-  });
-  document.addEventListener("click", e => {
-    if (!els.versionField.contains(e.target)) setVersionMenuOpen(false);
-  });
-  els.versionMenu.addEventListener("keydown", e => {
-    if (e.key === "Escape") {
-      setVersionMenuOpen(false);
-      els.version.focus();
-    }
   });
 
   els.repoLink.href = `https://github.com/${DATA.repo}`;
@@ -478,6 +535,7 @@
 
   restoreState();
   buildControls();
+  wireMultiSelects();
   syncControls();
   render();
   renderPairs();

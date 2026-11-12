@@ -52,6 +52,12 @@
       <label for="triage">Triage</label>
       <select id="triage"></select>
     </div>
+    <div class="field multi-field" id="staleness-field">
+      <label id="staleness-label">Staleness</label>
+      <button type="button" id="staleness" class="multi-trigger"
+        aria-labelledby="staleness-label" aria-haspopup="true" aria-expanded="false">all states</button>
+      <div class="multi-menu" id="staleness-menu" role="group" aria-label="Staleness filters" hidden></div>
+    </div>
       <div class="field">
         <label for="sort">Sort</label>
         <select id="sort"></select>
@@ -74,6 +80,7 @@
             <th>Labels</th>
             <th>Duplicates</th>
             <th>Triage</th>
+            <th>Staleness</th>
             <th>Created</th>
             <th>Updated</th>
             <th class="num">Comments</th>

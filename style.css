@@ -312,6 +312,16 @@ td.num a:hover { text-decoration: underline; }
 }
 .dot.triaged { background: #137333; }
 .dot.untriaged { background: #e8a13a; }
+.dot.green { background: #137333; }
+.dot.yellow { background: #e8a13a; }
+.dot.red { background: #b3261e; }
+
+td.staleness { white-space: nowrap; }
+.stale-text { font-size: 12px; }
+.stale-text.stale-unassigned-stale { color: #b3261e; font-weight: 600; }
+.stale-text.stale-assigned-stale { color: #8a5a00; font-weight: 600; }
+.stale-text.stale-in-progress { color: #00695c; }
+.idle { color: var(--muted); font-size: 11px; }
 
 td.empty { text-align: center; color: var(--muted); padding: 32px; }
 
