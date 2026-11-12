@@ -12,6 +12,8 @@
   const els = {
     search: document.getElementById("search"),
     kind: document.getElementById("kind"),
+    kindField: document.getElementById("kind-field"),
+    kindMenu: document.getElementById("kind-menu"),
     area: document.getElementById("area"),
     version: document.getElementById("version"),
     versionField: document.getElementById("version-field"),
@@ -83,7 +85,7 @@
     "assigned-stale": "yellow",
   };
 
-  const state = { q: "", kind: "", area: "", versions: [], triage: "", staleness: [],
+  const state = { q: "", kind: [], area: "", versions: [], triage: "", staleness: [],
                   sort: "number-desc", dupsOnly: false, assessQ: "", assessVerdict: "" };
   let activeTab = "issues";
 
@@ -96,7 +98,7 @@
   function encodeState() {
     const params = new URLSearchParams();
     if (state.q) params.set("q", state.q);
-    if (state.kind) params.set("kind", state.kind);
+    if (state.kind.length) params.set("kind", state.kind.join(","));
     if (state.area) params.set("area", state.area);
     if (state.versions.length) params.set("branch", state.versions.join(","));
     if (state.triage) params.set("triage", state.triage);
@@ -109,7 +111,8 @@
   function applyUrlState(params) {
     if (![...params.keys()].length) return;
     state.q = params.get("q") || "";
-    state.kind = params.get("kind") || "";
+    const kind = params.get("kind");
+    state.kind = kind ? kind.split(",") : [];
     state.area = params.get("area") || "";
     const branch = params.get("branch");
     state.versions = branch ? branch.split(",") : [];
@@ -137,6 +140,10 @@
         saved.staleness = saved.staleness ? [saved.staleness] : [];
       }
       if (!Array.isArray(saved.staleness)) saved.staleness = [];
+      if (typeof saved.kind === "string") {  // migrate old single-select
+        saved.kind = saved.kind ? [saved.kind] : [];
+      }
+      if (!Array.isArray(saved.kind)) saved.kind = [];
       Object.assign(state, saved);
     } catch (e) { /* ignore */ }
   }
@@ -237,8 +244,17 @@
 
   function buildControls() {
     const kinds = tally(i => (i.kind && i.kind !== "-" ? [i.kind] : []));
-    fillSelect(els.kind, "all kinds",
-      [...kinds.keys()].sort().map(k => [k, `${k} (${kinds.get(k)})`]));
+    makeMultiSelect({
+      field: els.kindField,
+      trigger: els.kind,
+      menu: els.kindMenu,
+      stateKey: "kind",
+      items: [...kinds.keys()].sort()
+        .map(k => ({ value: k, label: `${k} (${kinds.get(k)})` })),
+      summarize: vals => !vals.length ? "all kinds"
+        : vals.length === 1 ? vals[0]
+        : `${vals.length} selected`,
+    });
 
     const areas = tally(i => [i.area]);
     const areaOrder = [...areas.keys()].sort((a, b) =>
@@ -279,7 +295,7 @@
   }
 
   function matches(issue) {
-    if (state.kind && issue.kind !== state.kind) return false;
+    if (state.kind.length && !state.kind.includes(issue.kind)) return false;
     if (state.area && issue.area !== state.area) return false;
     if (state.versions.length && !issue.versions.some(v => state.versions.includes(v))) return false;
     if (state.triage === "triaged" && !issue.triaged) return false;
@@ -507,7 +523,6 @@
 
   function syncControls() {
     els.search.value = state.q;
-    els.kind.value = state.kind;
     els.area.value = state.area;
     els.triage.value = state.triage;
     els.sort.value = state.sort;
@@ -522,7 +537,7 @@
     clearTimeout(debounce);
     debounce = setTimeout(() => { state.q = els.search.value.trim(); render(); }, 120);
   });
-  for (const sel of [els.kind, els.area, els.triage]) {
+  for (const sel of [els.area, els.triage]) {
     sel.addEventListener("change", () => {
       state[sel.id] = sel.value;
       render();
@@ -531,7 +546,7 @@
   els.sort.addEventListener("change", () => { state.sort = els.sort.value; render(); });
   els.dups.addEventListener("change", () => { state.dupsOnly = els.dups.checked; render(); });
   els.reset.addEventListener("click", () => {
-    Object.assign(state, { q: "", kind: "", area: "", versions: [], triage: "", staleness: [], sort: "number-desc", dupsOnly: false });
+    Object.assign(state, { q: "", kind: [], area: "", versions: [], triage: "", staleness: [], sort: "number-desc", dupsOnly: false });
     syncControls();
     for (const inst of MULTI_SELECTS) multiOpen(inst, false);
     render();

@@ -34,9 +34,11 @@
         <label for="search">Search</label>
         <input id="search" type="search" placeholder="words in title, body or labels…" autocomplete="off">
       </div>
-      <div class="field">
-        <label for="kind">Kind</label>
-        <select id="kind"></select>
+      <div class="field multi-field" id="kind-field">
+        <label id="kind-label">Kind</label>
+        <button type="button" id="kind" class="multi-trigger"
+          aria-labelledby="kind-label" aria-haspopup="true" aria-expanded="false">all kinds</button>
+        <div class="multi-menu" id="kind-menu" role="group" aria-label="Kind filters" hidden></div>
       </div>
       <div class="field">
         <label for="area">Area</label>
